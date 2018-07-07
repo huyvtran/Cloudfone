@@ -2004,17 +2004,17 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
 //    return YES;
 //}
 
-//-(BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler {
-//    //  Di chuyen den view history neu nguoi dung click vao history tu dien thoai de mo app
-//    [PhoneMainView.instance changeCurrentView:CallsHistoryViewController.compositeViewDescription];
-//    
-//    NSLog(@"%@", userActivity.activityType);
-//    NSLog(@"%@", userActivity.title);
-//    NSDictionary *info = userActivity.userInfo;
-//    NSLog(@"%@", info);
-//    
-//    return YES;
-//}
+-(BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler {
+    //  Di chuyen den view history neu nguoi dung click vao history tu dien thoai de mo app
+    [PhoneMainView.instance changeCurrentView:CallsHistoryViewController.compositeViewDescription];
+    
+    NSLog(@"%@", userActivity.activityType);
+    NSLog(@"%@", userActivity.title);
+    NSDictionary *info = userActivity.userInfo;
+    NSLog(@"%@", info);
+    
+    return YES;
+}
 
 
 #pragma mark - sync contact xmpp

@@ -1320,7 +1320,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                                 
                                 // Save message
                                 NSString *type = @"";
-                                if ([typeMessage isEqualToString:@"userimage"]) {
+                                if ([typeMessage isEqualToString:userimage]) {
                                     type = imageMessage;
                                 }else if ([typeMessage isEqualToString:@"uservideo"]){
                                     type = videoMessage;
@@ -1328,7 +1328,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                                 [NSDatabase saveMessage:sendPhone toPhone:USERNAME withContent:linkImage andStatus:NO withDelivered:2 andIdMsg:idMessage detailsUrl:linkImage andThumbUrl:linkImage withTypeMessage:type andExpireTime:burn andRoomID:@"" andExtra:nil andDesc:descriptionImage];
                             }else{
                                 NSString *type = @"";
-                                if ([typeMessage isEqualToString:@"userimage"]) {
+                                if ([typeMessage isEqualToString:userimage]) {
                                     type = imageMessage;
                                 }else if ([typeMessage isEqualToString:@"uservideo"]){
                                     type = videoMessage;
@@ -1345,7 +1345,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                             }
                             
                             //  If it is image message, the app will download this image from server
-                            if ([typeMessage isEqualToString: @"userimage"]) {
+                            if ([typeMessage isEqualToString: userimage]) {
                                 [self downloadImageFromServerWithName: linkImage andIdMessage: idMessage];
                             }
                         }else{
@@ -1357,7 +1357,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                                 [[UIApplication sharedApplication] setApplicationIconBadgeNumber:curBadge+1];
                                 
                                 NSString *type = @"";
-                                if ([typeMessage isEqualToString:@"userimage"]) {
+                                if ([typeMessage isEqualToString:userimage]) {
                                     type = imageMessage;
                                 }else if ([typeMessage isEqualToString:@"uservideo"]){
                                     type = videoMessage;
@@ -1369,7 +1369,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                                 [AppUtils updateBadgeForMessageOfUser:sendPhone isIncrease:YES];
                                 
                                 NSString *type = @"";
-                                if ([typeMessage isEqualToString:@"userimage"]) {
+                                if ([typeMessage isEqualToString:userimage]) {
                                     type = imageMessage;
                                 }else if ([typeMessage isEqualToString:@"uservideo"]){
                                     type = videoMessage;
@@ -1388,7 +1388,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                             }
                             //  Download picture from server
                             //  If it is image message, the app will download this image from server
-                            if ([typeMessage isEqualToString: @"userimage"]) {
+                            if ([typeMessage isEqualToString: userimage]) {
                                 [self downloadImageFromServerWithName: linkImage andIdMessage: idMessage];
                             }else if ([typeMessage isEqualToString:@"uservideo"]){
                                 MessageEvent *msgEvent = [NSDatabase getMessageEventWithId:idMessage];
@@ -1577,7 +1577,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                                             {
                                              
                                                 NSString *type = @"";
-                                                if ([typeMessage isEqualToString:@"userimage"]) {
+                                                if ([typeMessage isEqualToString:userimage]) {
                                                     type = imageMessage;
                                                 }else if ([typeMessage isEqualToString:@"uservideo"]){
                                                     type = videoMessage;
@@ -1597,7 +1597,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                                                 [NSDatabase saveConversationForRoomChat:curRoomName isUnread:YES];
                                                 
                                                 NSString *type = @"";
-                                                if ([typeMessage isEqualToString:@"userimage"]) {
+                                                if ([typeMessage isEqualToString:userimage]) {
                                                     type = imageMessage;
                                                 }else if ([typeMessage isEqualToString:@"uservideo"]){
                                                     type = videoMessage;
@@ -1613,7 +1613,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                                         }
                                         
                                         //  If it is image message, the app will download this image from server
-                                        if ([typeMessage isEqualToString: @"userimage"]) {
+                                        if ([typeMessage isEqualToString: userimage]) {
                                             [self downloadImageFromServerWithName: linkImage andIdMessage: idMessage];
                                         }else if ([typeMessage isEqualToString:@"uservideo"]){
                                             MessageEvent *msgEvent = [NSDatabase getMessageEventWithId:idMessage];
@@ -2137,11 +2137,11 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                             if (![cloudfoneID isEqualToString:USERNAME])
                             {
                                 msgContent = [NSString stringWithFormat:@"%@ %@ %@", username, [localization localizedStringForKey:joined_the_room], time];
-                                [NSDatabase saveMessage:@"" toPhone:[[NSUserDefaults standardUserDefaults] objectForKey: key_login] withContent:msgContent andStatus:YES withDelivered:delivered andIdMsg:idMessage detailsUrl:@"" andThumbUrl:@"" withTypeMessage:descriptionMessage andExpireTime:-1 andRoomID:[NSString stringWithFormat:@"%d", roomID] andExtra:@"" andDesc: nil];
+                                [NSDatabase saveMessage:@"" toPhone:USERNAME withContent:msgContent andStatus:YES withDelivered:delivered andIdMsg:idMessage detailsUrl:@"" andThumbUrl:@"" withTypeMessage:descriptionMessage andExpireTime:-1 andRoomID:[NSString stringWithFormat:@"%d", roomID] andExtra:@"" andDesc: nil];
                             }else{
                                 msgContent = [NSString stringWithFormat:@"%@ %@", [localization localizedStringForKey:text_joined_room_at], time];
                                 
-                                [NSDatabase saveMessage:@"" toPhone:[[NSUserDefaults standardUserDefaults] objectForKey: key_login] withContent:msgContent andStatus:YES withDelivered:delivered andIdMsg:idMessage detailsUrl:@"" andThumbUrl:@"" withTypeMessage:descriptionMessage andExpireTime:-1 andRoomID:[NSString stringWithFormat:@"%d", roomID] andExtra:@"" andDesc: nil];
+                                [NSDatabase saveMessage:@"" toPhone:USERNAME withContent:msgContent andStatus:YES withDelivered:delivered andIdMsg:idMessage detailsUrl:@"" andThumbUrl:@"" withTypeMessage:descriptionMessage andExpireTime:-1 andRoomID:[NSString stringWithFormat:@"%d", roomID] andExtra:@"" andDesc: nil];
                             }
                             */
                         }

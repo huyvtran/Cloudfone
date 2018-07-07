@@ -1189,6 +1189,7 @@
 "text_alert"    =   "Thông báo"
 "text_close"    =   "Đóng"
 "text_cannot_send_video"    =   "Không thể gửi video!"
+"text_cannot_send_picture"  =   "Gửi ảnh không thành công!"
 "text_ok"       =   "Đồng ý"
 "text_unfriend_content" =   "Bạn có muốn huỷ kết bạn với người này?"
 "text_clear_chat_history"   =   "Xoá lịch sử tin nhắn"
@@ -1201,3 +1202,4 @@
 
 "text_show_pass"    =   "HIỆN"
 "text_hide_pass"    =   "ẨN"
+"text_capture_sent" =   "Ảnh đã được gửi"

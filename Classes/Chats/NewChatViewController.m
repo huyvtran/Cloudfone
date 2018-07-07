@@ -794,7 +794,7 @@
         
         [session uploadData:imageData withName:imageName beginUploadBlock:nil finishUploadBlock:^(UploadPicture *uploadSession) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self updateImageSendMessageWithInfo: uploadSession withType: @"userimage" andMessageId:session.idMessage];
+                [self updateImageSendMessageWithInfo: uploadSession withType: userimage andMessageId:session.idMessage];
                 NSLog(@"Da upload xong hinh anh");
             });
         }];
@@ -861,14 +861,12 @@
         NSString *displayName = [NSDatabase getProfielNameOfAccount: USERNAME];
         
         NSString *strPush = [appDelegate.localization localizedStringForKey:sent_message_to_you];
-        if ([typeMedia isEqualToString:@"userimage"]) {
+        if ([typeMedia isEqualToString:userimage]) {
             strPush = [NSString stringWithFormat:@"%@ %@", displayName, [appDelegate.localization localizedStringForKey:sent_photo_to_you]];
         }else if ([typeMedia isEqualToString:@"uservideo"]){
             strPush = [NSString stringWithFormat:@"%@ %@", displayName, [appDelegate.localization localizedStringForKey:sent_video_to_you]];
         }
-        
-        [self sendMessageForOfflineForUser:remoteParty fromSender:USERNAME
-                               withContent:strPush andTypeMessage:typeMedia withGroupID:@""];
+        [AppUtils sendMessageForOfflineForUser:remoteParty fromSender:USERNAME withContent:strPush andTypeMessage:typeMedia withGroupID:@""];
         
         int burn = [AppUtils getBurnMessageValueOfRemoteParty: remoteParty];
         [appDelegate.myBuddy.protocol sendMessageMediaForUser:remoteParty withLinkImage:uploadSession.namePicture andDescription:appDelegate.titleCaption andIdMessage:idOfMsg andType:typeMedia withBurn:burn forGroup:NO];
@@ -1603,7 +1601,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     MessageEvent *message = [_listMessages objectAtIndex: indexPath.row];
-    if ([message.sendPhone isEqualToString: [[NSUserDefaults standardUserDefaults] objectForKey: key_login]])
+    if ([message.sendPhone isEqualToString: USERNAME])
     {
         if ([message.typeMessage isEqualToString: typeTextMessage]) {
             ChatTableViewCell *cell = [[ChatTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"chatSend"];
@@ -1877,9 +1875,7 @@
     //  sendMsgData = nil;
     NSString *displayName = [NSDatabase getProfielNameOfAccount: USERNAME];
     NSString *strPush = [NSString stringWithFormat:@"%@: %@", displayName, messageSend];
-    [self sendMessageForOfflineForUser:remoteParty fromSender:USERNAME
-                           withContent:strPush
-                        andTypeMessage:@"text" withGroupID:@""];
+    [AppUtils sendMessageForOfflineForUser:remoteParty fromSender:USERNAME withContent:strPush andTypeMessage:@"text" withGroupID:@""];
     
     // setup các UI
     _lbNoMessage.hidden = YES;
@@ -2005,41 +2001,6 @@
 }
 
 #pragma mark - Emoji
-
-- (void)sendMessageForOfflineForUser: (NSString *)IDRecipient fromSender: (NSString *)Sender withContent: (NSString *)content andTypeMessage: (NSString *)typeMessage withGroupID: (NSString *)GroupID
-{
-    NSString *strURL = [NSString stringWithFormat:@"%@/%@", link_api, PushSharp];
-    NSURL *URL = [NSURL URLWithString:strURL];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL: URL];
-    [request setHTTPMethod:@"POST"];
-    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
-    [request setTimeoutInterval: 60];
-    
-    NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] init];
-    [jsonDict setObject:AuthUser forKey:@"AuthUser"];
-    [jsonDict setObject:AuthKey forKey:@"AuthKey"];
-    [jsonDict setObject:IDRecipient forKey:@"IDRecipient"];
-    [jsonDict setObject:@"yes" forKey:@"Xmpp"];
-    [jsonDict setObject:Sender forKey:@"Sender"];
-    [jsonDict setObject:typeMessage forKey:@"Type"];
-    [jsonDict setObject:content forKey:@"Content"];
-    [jsonDict setObject:GroupID forKey:@"GroupID"];
-    
-    NSString *jsonRequest = [jsonDict JSONString];
-    NSData *requestData = [jsonRequest dataUsingEncoding:NSUTF8StringEncoding];
-    
-    [request setHTTPMethod:@"POST"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    
-    [request setValue:[NSString stringWithFormat:@"%d", (int)[requestData length]] forHTTPHeaderField:@"Content-Length"];
-    [request setHTTPBody: requestData];
-    
-    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-    if(connection) {
-        NSLog(@"Connection Successful");
-    }
-}
 
 //  HÀM CHUYỂN CHUỖI CÓ EMOTION THÀNH CHUỖI KÝ TỰ
 - (NSString *)convertEmojiToString:(NSString *)string {

@@ -3012,7 +3012,7 @@ static int comp_call_state_paused(const LinphoneCall *call, const void *param) {
     //	const char *refkey = linphone_proxy_config_get_ref_key(proxyCfg);
     //	BOOL pushNotifEnabled = (refkey && strcmp(refkey, "push_notification") == 0);
     
-    if ([LinphoneAppDelegate sharedInstance]._deviceToken != nil && ![[LinphoneAppDelegate sharedInstance]._deviceToken isEqualToString:@""] && 2 == 1) {
+    if ([LinphoneAppDelegate sharedInstance]._deviceToken != nil && ![[LinphoneAppDelegate sharedInstance]._deviceToken isEqualToString:@""]) {
         const unsigned char *tokenBuffer = [tokenData bytes];
         NSMutableString *tokenString = [NSMutableString stringWithCapacity:[tokenData length] * 2];
         for (int i = 0; i < [tokenData length]; ++i) {

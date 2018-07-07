@@ -210,13 +210,11 @@ static UICompositeViewDescription *compositeDescription = nil;
     }
     
     // Check section
-    NSString *mySip = [[NSUserDefaults standardUserDefaults] objectForKey: key_login];
-    
     [listOutgoing removeAllObjects];
-    [listOutgoing addObjectsFromArray: [NSDatabase getAllListCallOfMe:mySip withPhoneNumber:_phoneNumberDetail andCallDirection:outgoing_call]];
+    [listOutgoing addObjectsFromArray: [NSDatabase getAllListCallOfMe:USERNAME withPhoneNumber:_phoneNumberDetail andCallDirection:outgoing_call]];
     
     [listIncomming removeAllObjects];
-    [listIncomming addObjectsFromArray: [NSDatabase getAllListCallOfMe:mySip withPhoneNumber:_phoneNumberDetail andCallDirection: incomming_call]];
+    [listIncomming addObjectsFromArray: [NSDatabase getAllListCallOfMe:USERNAME withPhoneNumber:_phoneNumberDetail andCallDirection: incomming_call]];
     
     if (listOutgoing.count > 0 && listIncomming.count > 0) {
         checkSection = YES;
@@ -746,13 +744,11 @@ static UICompositeViewDescription *compositeDescription = nil;
     totalDuration = [[infosCall firstObject] intValue];
     
     // Check section
-    NSString *mySip = [[NSUserDefaults standardUserDefaults] objectForKey: key_login];
-    
     [listOutgoing removeAllObjects];
-    [listOutgoing addObjectsFromArray: [NSDatabase getAllListCallOfMe:mySip withPhoneNumber:_phoneNumberDetail andCallDirection:outgoing_call]];
+    [listOutgoing addObjectsFromArray: [NSDatabase getAllListCallOfMe:USERNAME withPhoneNumber:_phoneNumberDetail andCallDirection:outgoing_call]];
     
     [listIncomming removeAllObjects];
-    [listIncomming addObjectsFromArray: [NSDatabase getAllListCallOfMe:mySip withPhoneNumber:_phoneNumberDetail andCallDirection:incomming_call]];
+    [listIncomming addObjectsFromArray: [NSDatabase getAllListCallOfMe:USERNAME withPhoneNumber:_phoneNumberDetail andCallDirection:incomming_call]];
     
     if (listOutgoing.count > 0 && listIncomming.count > 0) {
         checkSection = YES;

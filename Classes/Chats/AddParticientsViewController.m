@@ -164,14 +164,13 @@ static UICompositeViewDescription *compositeDescription = nil;
         }else{
             NSString *curFriend = [AppUtils getSipFoneIDFromString: [LinphoneAppDelegate sharedInstance].friendBuddy.accountName];
             NSString *shortCurFriend = [curFriend substringFromIndex:6];
-            NSString *myAccount = [[NSUserDefaults standardUserDefaults] objectForKey: key_login];
-            NSString *shortMe = [myAccount substringFromIndex:6];
+            NSString *shortMe = [USERNAME substringFromIndex:6];
             
             roomName = [NSString stringWithFormat:@"%@_%@_%@", shortMe , shortCurFriend, [AppUtils randomStringWithLength: 8]];
             roomName = [roomName lowercaseString];
             
             //  Tạo group chat và lưu xuống database
-            [[LinphoneAppDelegate sharedInstance].myBuddy.protocol createGroupOfMe:myAccount andGroupName:roomName];
+            [[LinphoneAppDelegate sharedInstance].myBuddy.protocol createGroupOfMe:USERNAME andGroupName:roomName];
         }
     }else{
         if (listMemberAdd.count == 0) {
@@ -330,7 +329,7 @@ static UICompositeViewDescription *compositeDescription = nil;
             NSString *time = [AppFunctions getCurrentTimeStamp];
             NSString *msgContent = [NSString stringWithFormat:@"%@ %@", [localization localizedStringForKey:text_joined_room_at], time];
             
-            [NSDatabase saveMessage:@"" toPhone:[[NSUserDefaults standardUserDefaults] objectForKey: key_login]  withContent:msgContent andStatus:YES withDelivered:2 andIdMsg:idMessage detailsUrl:@"" andThumbUrl:@"" withTypeMessage:descriptionMessage andExpireTime:5 andRoomID:[NSString stringWithFormat:@"%d", [LinphoneAppDelegate sharedInstance].idRoomChat] andExtra:@"" andDesc: nil];
+            [NSDatabase saveMessage:@"" toPhone:USERNAME  withContent:msgContent andStatus:YES withDelivered:2 andIdMsg:idMessage detailsUrl:@"" andThumbUrl:@"" withTypeMessage:descriptionMessage andExpireTime:5 andRoomID:[NSString stringWithFormat:@"%d", [LinphoneAppDelegate sharedInstance].idRoomChat] andExtra:@"" andDesc: nil];
             */
             [[PhoneMainView instance] changeCurrentView:GroupMainChatViewController.compositeViewDescription];
         }

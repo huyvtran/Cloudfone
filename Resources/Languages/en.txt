@@ -1158,6 +1158,7 @@
 "text_alert"    =   "Alert"
 "text_close"    =   "Close"
 "text_cannot_send_video"    =   "Can not send video!"
+"text_cannot_send_picture"  =   "Fail to send image!"
 "text_ok"       =   "OK"
 "text_unfriend_content" =   "Do you want to unfriend this person?"
 "text_clear_chat_history"   =   "Clear chat history"
@@ -1170,3 +1171,5 @@
 
 "text_show_pass"    =   "SHOW"
 "text_hide_pass"    =   "HIDE"
+
+"text_capture_sent" =   "Image was sent"

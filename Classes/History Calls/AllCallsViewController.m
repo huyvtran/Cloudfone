@@ -109,8 +109,7 @@
         }
         [listCalls removeAllObjects];
         
-        NSString *myCloudFone = [[NSUserDefaults standardUserDefaults] objectForKey: key_login];
-        NSArray *tmpArr = [NSDatabase getHistoryCallListOfUser:myCloudFone isMissed: false];
+        NSArray *tmpArr = [NSDatabase getHistoryCallListOfUser:USERNAME isMissed: false];
         [listCalls addObjectsFromArray: tmpArr];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -157,8 +156,7 @@
     if ([object isKindOfClass:[NSNumber class]]) {
         int value = [object intValue];
         if (value == 0) {
-            NSString *mySip = [[NSUserDefaults standardUserDefaults] objectForKey: key_login];
-            BOOL result = [NSDatabase deleteAllHistoryCallOfUser: mySip];
+            BOOL result = [NSDatabase deleteAllHistoryCallOfUser: USERNAME];
             if (!result) {
                 [self.view makeToast:[[LinphoneAppDelegate sharedInstance].localization localizedStringForKey:text_failed] duration:2.0 position:CSToastPositionCenter];
             }else{
@@ -203,10 +201,8 @@
 
 //  Get lại danh sách các cuộc gọi sau khi xoá
 - (void)reGetListCallsForHistory {
-    NSString *myCloudFoneID = [[NSUserDefaults standardUserDefaults] objectForKey: key_login];
-    
     [listCalls removeAllObjects];
-    [listCalls addObjectsFromArray:[NSDatabase getHistoryCallListOfUser:myCloudFoneID isMissed:false]];
+    [listCalls addObjectsFromArray:[NSDatabase getHistoryCallListOfUser:USERNAME isMissed:false]];
 }
 
 #pragma mark - UITableview

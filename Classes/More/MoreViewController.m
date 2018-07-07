@@ -338,9 +338,7 @@ static UICompositeViewDescription *compositeDescription = nil;
     [self removeSipProxyConfig: USERNAME];
     
     // insert last logout cho user
-    NSString *user = [[NSUserDefaults standardUserDefaults] objectForKey: key_login];
-    NSString *pass = [[NSUserDefaults standardUserDefaults] objectForKey: key_password];
-    BOOL result = [NSDatabase insertLastLogoutForUser:user passWord:pass andRelogin:1];
+    BOOL result = [NSDatabase insertLastLogoutForUser:USERNAME passWord:PASSWORD andRelogin:1];
     if (!result) {
         NSLog(@"Can not save state logout for user....");
     }

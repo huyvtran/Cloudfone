@@ -640,7 +640,7 @@
         [cell setTag: indexPath.row];
         
         NSString *cloudfoneID = [listUsers objectAtIndex: (indexPath.row-listData.count-1)];
-        if ([cloudfoneID isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey: key_login]]) {
+        if ([cloudfoneID isEqualToString:USERNAME]) {
             [cell._lbName setText: [localization localizedStringForKey:text_you]];
         }else
         {

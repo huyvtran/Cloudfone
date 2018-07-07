@@ -53,16 +53,15 @@
     }
     [listCall removeAllObjects];
     
-    NSString *myCloudFone = [[NSUserDefaults standardUserDefaults] objectForKey: key_login];
-    [listCall addObjectsFromArray:[NSDatabase getHistoryRecordCallListOfUser:myCloudFone]];
+    [listCall addObjectsFromArray:[NSDatabase getHistoryRecordCallListOfUser:USERNAME]];
     
     if (listCall.count == 0) {
-        [_tbRecordCall setHidden: true];
-        [_lbNoCalls setHidden: false];
+        _tbRecordCall.hidden = YES;
+        _lbNoCalls.hidden = NO;
     }else {
-        [_tbRecordCall setHidden: false];
         [_tbRecordCall reloadData];
-        [_lbNoCalls setHidden: true];
+        _tbRecordCall.hidden = NO;
+        _lbNoCalls.hidden = YES;
     }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(btnDoneRemoveHistoryCallPressed)

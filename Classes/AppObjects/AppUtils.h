@@ -143,5 +143,6 @@
 + (NSString *)getCurrentVersionApplicaton;
 + (BOOL)soundForCallIsEnable;
 + (UIColor *)randomColorWithAlpha: (float)alpha;
++ (void)sendMessageForOfflineForUser: (NSString *)IDRecipient fromSender: (NSString *)Sender withContent: (NSString *)content andTypeMessage: (NSString *)typeMessage withGroupID: (NSString *)GroupID;
 
 @end

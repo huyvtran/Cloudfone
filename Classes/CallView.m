@@ -49,6 +49,7 @@
 #import <OpenGLES/ES1/glext.h>
 #import <QuartzCore/QuartzCore.h>
 #import <OpenGLES/EAGLDrawable.h>
+#import "UploadPicture.h"
 
 const NSInteger SECURE_BUTTON_TAG = 5;
 
@@ -151,17 +152,14 @@ static UICompositeViewDescription *compositeDescription = nil;
     
     
     tapOnVideoCall = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(whenTapOnVideoCall)];
-    [tapOnVideoCall setDelegate: self];
+    tapOnVideoCall.delegate = self;
     [viewVideoCall addGestureRecognizer: tapOnVideoCall];
     
     [tapOnVideoCall requireGestureRecognizerToFail: singleFingerTap];
-    
-	[singleFingerTap setNumberOfTapsRequired:2];
-	[singleFingerTap setCancelsTouchesInView:FALSE];
+    singleFingerTap.numberOfTapsRequired = 2;
+    singleFingerTap.cancelsTouchesInView = NO;
 	[viewVideoCall addGestureRecognizer:singleFingerTap];
-
 	[videoZoomHandler setup: viewVideoCall];
-
 
 	UIPanGestureRecognizer *dragndrop =
 		[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(moveVideoPreview:)];
@@ -211,8 +209,8 @@ static UICompositeViewDescription *compositeDescription = nil;
     
     //  Leo Kelvin
     [self addScrollview];
-    [_bottomBar setHidden: true];
-    [_bottomBar setClipsToBounds: true];
+    _bottomBar.hidden = YES;
+    _bottomBar.clipsToBounds = YES;
     
 	LinphoneManager.instance.nextCallIsTransfer = NO;
 
@@ -523,19 +521,16 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
     _lbVideoTime.text = [LinphoneUtils durationToString:duration];
 
     if (duration > 0) {
-        [_lbState setText: [appDelegate.localization localizedStringForKey:text_connected]];
-        [_lbState setTextColor:[UIColor colorWithRed:(27/255.0) green:(175/255.0)
-                                                blue:(153/255.0) alpha:1.0]];
+        _lbState.text = [appDelegate.localization localizedStringForKey:text_connected];
+        _lbState.textColor = [UIColor colorWithRed:(27/255.0) green:(175/255.0)
+                                              blue:(153/255.0) alpha:1.0];
         
         [self callQualityUpdate];
         
     }else{
-        [_lbState setText: [appDelegate.localization localizedStringForKey:text_status_connecting]];
-        [_lbState setTextColor:[UIColor whiteColor]];
+        _lbState.text = [appDelegate.localization localizedStringForKey:text_status_connecting];
+        _lbState.textColor = UIColor.whiteColor;
     }
-    
-	//  [_pausedCallsTable update];
-	//  [_conferenceCallsTable update];
 }
 
 //  Call quality
@@ -549,7 +544,7 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
         //FIXME double check call state before computing, may cause core dump
         float quality = linphone_call_get_average_quality(call);
         if(quality < 1) {
-            [_lbQuality setText: [NSString stringWithFormat:@"%@: %@", [appDelegate.localization localizedStringForKey:text_quality], [appDelegate.localization localizedStringForKey:text_quality_worse]]];
+            _lbQuality.text = [NSString stringWithFormat:@"%@: %@", [appDelegate.localization localizedStringForKey:text_quality], [appDelegate.localization localizedStringForKey:text_quality_worse]];
             
             NSRange range = [_lbQuality.text rangeOfString:[appDelegate.localization localizedStringForKey:text_quality_worse]];
             if (range.location != NSNotFound) {
@@ -557,11 +552,11 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
                 [videoStateString addAttribute:NSForegroundColorAttributeName
                                value:[UIColor redColor]
                                range:NSMakeRange(range.location, range.length)];
-                [lbStateVideoCall setAttributedText: videoStateString];
+                lbStateVideoCall.attributedText = videoStateString;
             }
         } else if (quality < 2) {
-            [_lbQuality setText: [NSString stringWithFormat:@"%@: %@", [appDelegate.localization localizedStringForKey:text_quality], [appDelegate.localization localizedStringForKey:text_quality_very_low]]];
-            [lbStateVideoCall setText: _lbQuality.text];
+            _lbQuality.text = [NSString stringWithFormat:@"%@: %@", [appDelegate.localization localizedStringForKey:text_quality], [appDelegate.localization localizedStringForKey:text_quality_very_low]];
+            lbStateVideoCall.text = _lbQuality.text;
             
             NSRange range = [_lbQuality.text rangeOfString:[appDelegate.localization localizedStringForKey:text_quality_very_low]];
             if (range.location != NSNotFound) {
@@ -569,10 +564,10 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
                 [videoStateString addAttribute:NSForegroundColorAttributeName
                                          value:[UIColor orangeColor]
                                          range:NSMakeRange(range.location, range.length)];
-                [lbStateVideoCall setAttributedText: videoStateString];
+                lbStateVideoCall.attributedText = videoStateString;
             }
         } else if (quality < 3) {
-            [_lbQuality setText: [NSString stringWithFormat:@"%@: %@", [appDelegate.localization localizedStringForKey:text_quality], [appDelegate.localization localizedStringForKey:text_quality_low]]];
+            _lbQuality.text = [NSString stringWithFormat:@"%@: %@", [appDelegate.localization localizedStringForKey:text_quality], [appDelegate.localization localizedStringForKey:text_quality_low]];
             
             NSRange range = [_lbQuality.text rangeOfString:[appDelegate.localization localizedStringForKey:text_quality_low]];
             if (range.location != NSNotFound) {
@@ -580,10 +575,10 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
                 [videoStateString addAttribute:NSForegroundColorAttributeName
                                          value:[UIColor orangeColor]
                                          range:NSMakeRange(range.location, range.length)];
-                [lbStateVideoCall setAttributedText: videoStateString];
+                lbStateVideoCall.attributedText = videoStateString;
             }
         } else if(quality < 4){
-            [_lbQuality setText: [NSString stringWithFormat:@"%@: %@", [appDelegate.localization localizedStringForKey:text_quality], [appDelegate.localization localizedStringForKey:text_quality_average]]];
+            _lbQuality.text = [NSString stringWithFormat:@"%@: %@", [appDelegate.localization localizedStringForKey:text_quality], [appDelegate.localization localizedStringForKey:text_quality_average]];
             
             NSRange range = [_lbQuality.text rangeOfString:[appDelegate.localization localizedStringForKey:text_quality_average]];
             if (range.location != NSNotFound) {
@@ -591,10 +586,10 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
                 [videoStateString addAttribute:NSForegroundColorAttributeName
                                          value:[UIColor yellowColor]
                                          range:NSMakeRange(range.location, range.length)];
-                [lbStateVideoCall setAttributedText: videoStateString];
+                lbStateVideoCall.attributedText = videoStateString;
             }
         } else{
-            [_lbQuality setText: [NSString stringWithFormat:@"%@: %@", [appDelegate.localization localizedStringForKey:text_quality], [appDelegate.localization localizedStringForKey:text_quality_good]]];
+            _lbQuality.text = [NSString stringWithFormat:@"%@: %@", [appDelegate.localization localizedStringForKey:text_quality], [appDelegate.localization localizedStringForKey:text_quality_good]];
             
             NSRange range = [_lbQuality.text rangeOfString:[appDelegate.localization localizedStringForKey:text_quality_good]];
             if (range.location != NSNotFound) {
@@ -602,7 +597,7 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
                 [videoStateString addAttribute:NSForegroundColorAttributeName
                                          value:[UIColor colorWithRed:(17/255.0) green:(186/255.0) blue:(153/255.0) alpha:1.0]
                                          range:NSMakeRange(range.location, range.length)];
-                [lbStateVideoCall setAttributedText: videoStateString];
+                lbStateVideoCall.attributedText = videoStateString;
             }
         }
     }
@@ -623,9 +618,9 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
     
     BOOL check = !call && !linphone_core_is_in_conference(LC);
     if (check) {
-        [_callPauseButton setSelected: TRUE];
+        _callPauseButton.selected = YES;
     }else{
-        [_callPauseButton setSelected: FALSE];
+        _callPauseButton.selected = NO;
     }
     [_callPauseButton setType:UIPauseButtonType_CurrentCall call:call];
     /*
@@ -700,8 +695,10 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
 #pragma mark - Event Functions
 
 - (void)bluetoothAvailabilityUpdateEvent:(NSNotification *)notif {
-	bool available = [[notif.userInfo objectForKey:@"available"] intValue];
-	[self hideSpeaker:available];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        bool available = [[notif.userInfo objectForKey:@"available"] intValue];
+        [self hideSpeaker:available];
+    });
 }
 
 - (void)callUpdateEvent:(NSNotification *)notif {
@@ -784,16 +781,15 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
             
             // Nếu không phải Outgoing trong conference thì set disable các button
             if (!changeConference) {
-                [btnConference setEnabled: false];
-                [btnNumpad setEnabled: FALSE];
-                //  [_routesSpeakerButton setEnabled: FALSE];
-                [_videoButton setEnabled: FALSE];
-                [_callPauseButton setEnabled: FALSE];
-                [buttonRecord setEnabled: FALSE];
-                [_microButton setEnabled: FALSE];
-                [_optionsTransferButton setEnabled: FALSE];
-                [buttonMessage setEnabled: FALSE];
-                [buttonSendfile setEnabled: FALSE];
+                btnConference.enabled = NO;
+                btnNumpad.enabled = NO;
+                _videoButton.enabled = NO;
+                _callPauseButton.enabled = NO;
+                buttonRecord.enabled = NO;
+                _microButton.enabled = NO;
+                _optionsTransferButton.enabled = NO;
+                buttonMessage.enabled = NO;
+                buttonSendfile.enabled = NO;
             }
             break;
         }
@@ -811,20 +807,20 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
             NSLog(@"File : %s",linphone_call_params_get_record_file(paramsCopy));
             linphone_call_start_recording(currentCall);
             
-            [btnConference setEnabled: true];
-            [btnNumpad setEnabled: true];
-            [_routesSpeakerButton setEnabled: true];
-            [_videoButton setEnabled: true];
-            [_callPauseButton setEnabled: true];
-            [_microButton setEnabled: true];
-            [_optionsTransferButton setEnabled: true];
-            [buttonMessage setEnabled: true];
-            [buttonRecord setEnabled: true];
-            [lbStateVideoCall setText:[NSString stringWithFormat:@"%@", [appDelegate.localization localizedStringForKey:text_connected]]];
+            btnConference.enabled = YES;
+            btnNumpad.enabled = YES;
+            _routesSpeakerButton.enabled = YES;
+            _videoButton.enabled = YES;
+            _callPauseButton.enabled = YES;
+            _microButton.enabled = YES;
+            _optionsTransferButton.enabled = YES;
+            buttonMessage.enabled = YES;
+            buttonRecord.enabled = YES;
+            
+            lbStateVideoCall.text = [NSString stringWithFormat:@"%@", [appDelegate.localization localizedStringForKey:text_connected]];
             
             // Add tất cả các cuộc gọi vào nhóm
             if (linphone_core_get_calls_nb(LC) >= 2) {
-                NSLog(@"-----gop conference connected");
                 linphone_core_add_all_to_conference([LinphoneManager getLc]);
             }
             
@@ -840,20 +836,18 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
 					linphone_call_params_low_bandwidth_enabled(param)) {
 				}
 			}
-            
-            [btnConference setEnabled: true];
-            [btnNumpad setEnabled: true];
-            [_routesSpeakerButton setEnabled: true];
-            [_videoButton setEnabled: true];
-            [_callPauseButton setEnabled: true];
-            [_microButton setEnabled: true];
-            [_optionsTransferButton setEnabled: true];
-            [buttonMessage setEnabled: true];
-            [buttonRecord setEnabled: true];
+            btnConference.enabled = YES;
+            btnNumpad.enabled = YES;
+            _routesSpeakerButton.enabled = YES;
+            _videoButton.enabled = YES;
+            _callPauseButton.enabled = YES;
+            _microButton.enabled = YES;
+            _optionsTransferButton.enabled = YES;
+            buttonMessage.enabled = YES;
+            buttonRecord.enabled = YES;
             
             // Add tất cả các cuộc gọi vào nhóm
             if (linphone_core_get_calls_nb(LC) >= 2) {
-                NSLog(@"-----gop conference stream");
                 linphone_core_add_all_to_conference([LinphoneManager getLc]);
             }
             
@@ -889,7 +883,7 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
 			}
 			break;
         case LinphoneCallEnd:{
-            [buttonRecord setSelected: FALSE];
+            buttonRecord.selected = NO;
             break;
         }
         case LinphoneCallError:{
@@ -1173,15 +1167,15 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
     
     [_callView addSubview: btHideKeypad];
     
-    [_hangupButton setHidden: true];
+    _hangupButton.hidden = YES;
 }
 
 - (void)fadeIn :(UIView*)view{
-    [view setTransform: CGAffineTransformMakeScale(1.3, 1.3)];
-    [view setAlpha: 0.0];
+    view.transform = CGAffineTransformMakeScale(1.3, 1.3);
+    view.alpha = 0.0;
     [UIView animateWithDuration:.35 animations:^{
-        [view setTransform: CGAffineTransformMakeScale(1.0, 1.0)];
-        [view setAlpha: 1.0];
+        view.transform = CGAffineTransformMakeScale(1.0, 1.0);
+        view.alpha = 1.0;
     }];
 }
 
@@ -1408,12 +1402,12 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
 }
 
 - (void)callEnded {
-    [buttonRecord setSelected: FALSE];
+    buttonRecord.selected = NO;
 }
 
 //  Hide keypad mini
 - (void)btnHideKeypadPressed{
-    [_viewCommand setHidden:false];
+    _viewCommand.hidden = NO;
     
     for (UIView *subView in _callView.subviews) {
         if (subView.tag == 10) {
@@ -1429,10 +1423,9 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
         }
     }
     //  An footer keypad
-    [btEndCall setHidden: YES];
-    [btHideKeypad setHidden: YES];
-    
-    [_hangupButton setHidden: NO];
+    btEndCall.hidden = YES;
+    btHideKeypad.hidden = YES;
+    _hangupButton.hidden = NO;
 }
 
 /*----- Kết thúc cuộc gọi trong màn hình video call -----*/
@@ -1462,7 +1455,7 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
         _lbVideoTime.hidden = YES;
         videoCallFooterView.hidden = YES;
         
-        iconCaptureScreen.hidden = YES;
+        iconCaptureScreen.hidden = NO;
     }
 }
 
@@ -1520,20 +1513,20 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
             }
         }
         dispatch_async(dispatch_get_main_queue(), ^(void){
-            [_nameLabel setText: fullName];
-            [lbAddressVideoCall setText: fullName];
-            [lbAddressConf setText: fullName];
-            [lbAddressVideoCall setText: fullName];
+            _nameLabel.text = fullName;
+            lbAddressVideoCall.text = fullName;
+            lbAddressConf.text = fullName;
+            lbAddressVideoCall.text = fullName;
             
             if ([addressPhoneNumber hasPrefix:@"778899"]) {
-                [buttonMessage setEnabled: true];
+                buttonMessage.enabled = YES;
             }else{
-                [buttonMessage setEnabled: false];
+                buttonMessage.enabled = NO;
             }
             if (![avatar isEqualToString:@""]) {
                 _avatarImage.image = [UIImage imageWithData: [NSData dataFromBase64String: avatar]];
             }else{
-                _avatarImage.image = [UIImage imageNamed:@"unknown_large"];
+                _avatarImage.image = [UIImage imageNamed:@"default-avatar"];
             }
         });
     });
@@ -1542,7 +1535,7 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
 //  add scroll view khi goi
 - (void)addScrollview {
     //  Add scroll View
-    [_scrollView setFrame: CGRectMake((_viewCommand.frame.size.width-3*wButton)/2, (_viewCommand.frame.size.height-2*wButton)/2, 3*wButton, 2*wButton)];
+    _scrollView.frame = CGRectMake((_viewCommand.frame.size.width-3*wButton)/2, (_viewCommand.frame.size.height-2*wButton)/2, 3*wButton, 2*wButton);
     _scrollView.pagingEnabled = YES;
     _scrollView.accessibilityActivationPoint = CGPointMake(wButton, wButton);
     
@@ -1553,9 +1546,8 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
     _scrollView.minimumZoomScale = 0.5;
     _scrollView.maximumZoomScale = 3;
     _scrollView.contentSize = CGSizeMake(5*wButton, 2*wButton);
-    
-    [_scrollView setShowsHorizontalScrollIndicator:NO];
-    [_scrollView setShowsVerticalScrollIndicator:NO];
+    _scrollView.showsHorizontalScrollIndicator = NO;
+    _scrollView.showsVerticalScrollIndicator = NO;
     
     // Conference button
     btnConference = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, wButton, wButton) ];
@@ -1569,12 +1561,11 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
     [btnConference addTarget:self
                       action:@selector(onConference)
             forControlEvents:UIControlEventTouchUpInside];
-    
-    [btnConference setEnabled: false];
+    btnConference.enabled = NO;
     [_scrollView addSubview:btnConference];
     
     // Keypad button
-    [_numpadButton setHidden: YES];
+    _numpadButton.hidden = YES;
     btnNumpad = [[UIButton alloc] init];
     [btnNumpad setFrame: CGRectMake(wButton, 0, wButton, wButton)];
     [btnNumpad setBackgroundImage:[UIImage imageNamed:[appDelegate.localization localizedStringForKey:img_keypad]]
@@ -1594,7 +1585,7 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
     [_scrollView addSubview:btnNumpad];
     
     // Speaker button
-    [_routesSpeakerButton setFrame: CGRectMake(2*wButton, 0, wButton, wButton)];
+    _routesSpeakerButton.frame = CGRectMake(2*wButton, 0, wButton, wButton);
     [_routesSpeakerButton setBackgroundImage:[UIImage imageNamed:[appDelegate.localization localizedStringForKey:img_speaker]]
                               forState:UIControlStateNormal ] ;
     [_routesSpeakerButton setBackgroundImage:[UIImage imageNamed:[appDelegate.localization localizedStringForKey:img_speaker_over]]
@@ -1607,7 +1598,7 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
     //  [self.scrollView addSubview:buttonSpeaker];
     
     // Video button
-    [_videoButton setFrame: CGRectMake(0, wButton, wButton, wButton)];
+    _videoButton.frame = CGRectMake(0, wButton, wButton, wButton);
     [_videoButton setBackgroundImage:[UIImage imageNamed:[appDelegate.localization localizedStringForKey:img_video]]
                             forState:UIControlStateNormal ] ;
     [_videoButton setBackgroundImage:[UIImage imageNamed:[appDelegate.localization localizedStringForKey:img_video_over]]
@@ -1617,13 +1608,10 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
     [_videoButton setBackgroundImage:[UIImage imageNamed:[appDelegate.localization localizedStringForKey:img_video_dis]]
                             forState: UIControlStateDisabled];
     //  Tạm thời đóng
-    //  [_videoButton setEnabled: TRUE];
-    [_videoButton setEnabled: false];
-    
-    //  [self.scrollView addSubview:buttonVideo];
+    _videoButton.enabled = NO;
     
     // Pause button
-    [_callPauseButton setFrame: CGRectMake(wButton, wButton, wButton, wButton)];
+    _callPauseButton.frame = CGRectMake(wButton, wButton, wButton, wButton);
     [_callPauseButton setBackgroundImage:[UIImage imageNamed:[appDelegate.localization localizedStringForKey:img_hold]]
                                 forState:UIControlStateNormal] ;
     [_callPauseButton setBackgroundImage:[UIImage imageNamed:[appDelegate.localization localizedStringForKey:img_hold_over]]
@@ -1655,7 +1643,7 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
     [_scrollView addSubview:buttonRecord];
     
     // Mute button
-    [_microButton setFrame: CGRectMake(3*wButton, 0, wButton, wButton)];
+    _microButton.frame = CGRectMake(3*wButton, 0, wButton, wButton);
     [_microButton setBackgroundImage:[UIImage imageNamed:[appDelegate.localization localizedStringForKey:img_mute]]
                             forState:UIControlStateNormal ] ;
     [_microButton setBackgroundImage:[UIImage imageNamed:[appDelegate.localization localizedStringForKey:img_mute_over]]
@@ -1668,7 +1656,7 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
     //  [self.scrollView addSubview:buttonMute];
     
     // Transfer button
-    [_optionsTransferButton setFrame: CGRectMake(4*wButton, 0, wButton, wButton)];
+    _optionsTransferButton.frame = CGRectMake(4*wButton, 0, wButton, wButton);
     [_optionsTransferButton setBackgroundImage:[UIImage imageNamed:[appDelegate.localization localizedStringForKey:img_transfer]]
                                       forState:UIControlStateNormal ] ;
     [_optionsTransferButton setBackgroundImage:[UIImage imageNamed:[appDelegate.localization localizedStringForKey:img_transfer_over]]
@@ -1677,8 +1665,7 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
                                       forState: UIControlStateSelected];
     [_optionsTransferButton setBackgroundImage:[UIImage imageNamed:[appDelegate.localization localizedStringForKey:img_transfer_dis]]
                                       forState:UIControlStateDisabled];
-    
-    [_optionsTransferButton setEnabled: false];
+    _optionsTransferButton.enabled = NO;
     
     /*  Leo Kelvin
      [buttonTransfer addTarget:self action:@selector(onTransfer)
@@ -1724,33 +1711,31 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
                               forState: UIControlStateSelected];
     [buttonSendfile setBackgroundImage:[UIImage imageNamed:[appDelegate.localization localizedStringForKey:img_send_dis]]
                               forState:UIControlStateDisabled];
-    [buttonSendfile setEnabled:false];
+    buttonSendfile.enabled = NO;
     [_scrollView addSubview:buttonSendfile];
 }
 
 /*----- Click vao button conference trong scrollView  -----*/
 -(void)onConference {
     changeConference = YES;
-    [_lbConferenceDuration setText: [appDelegate.localization localizedStringForKey:text_connected]];
-    [btnConference setBackgroundColor:[UIColor clearColor]];
-    
-    [_callView setHidden: YES];
-    [_conferenceView setHidden: NO];
+    _lbConferenceDuration.text = [appDelegate.localization localizedStringForKey:text_connected];
+    btnConference.backgroundColor = UIColor.clearColor;
+    _callView.hidden = YES;
+    _conferenceView.hidden = NO;
     
     NSDictionary *info = [NSDatabase getProfileInfoOfAccount: USERNAME];
     if (info != nil) {
         NSString *strAvatar = [info objectForKey:@"avatar"];
         if (strAvatar != nil && ![strAvatar isEqualToString: @""]) {
             NSData *myAvatar = [NSData dataFromBase64String: strAvatar];
-            [avatarConference setImage:[UIImage imageWithData: myAvatar]];
+            avatarConference.image = [UIImage imageWithData: myAvatar];
         }else{
-            [avatarConference setImage:[UIImage imageNamed:@"unknown_large"]];
+            avatarConference.image = [UIImage imageNamed:@"no_avatar"];
         }
     }else{
-        [avatarConference setImage: [UIImage imageNamed:@"unknown_large"]];
+        avatarConference.image = [UIImage imageNamed:@"no_avatar"];
     }
-    
-    [lbAddressConf setText: [[NSUserDefaults standardUserDefaults] objectForKey: key_login]];
+    lbAddressConf.text = USERNAME;
     
     updateTimeConf = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateConference) userInfo:nil repeats:YES];
 }
@@ -1847,7 +1832,7 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
         
         [_hangupButton setFrame: CGRectMake((SCREEN_WIDTH-60)/2, _callView.frame.size.height-hIconEndCall-35, hIconEndCall, hIconEndCall)];
     }else{
-        hIconEndCall = 50.0;
+        hIconEndCall = 60.0;
         hInfo = 90.0;
         wButton = 90.0;
         [_lbState setFont:[UIFont fontWithName:HelveticaNeue size:15.0]];
@@ -2151,6 +2136,7 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
         [viewVideoCall addSubview: videoCallFooterView];
     }
     videoCallFooterView.hidden = YES;
+    iconCaptureScreen.hidden = NO;
     
     //  Address video
     lbAddressVideoCall.frame = CGRectMake(10, _videoPreview.frame.origin.y, 150, 30);
@@ -2214,16 +2200,21 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
 
 - (IBAction)iconCaptureScreenClicked:(UIButton *)sender {
     UIImage *screengrab = [self takeAScreenShot];
-    UIImageWriteToSavedPhotosAlbum(screengrab, self, @selector(imageSavedToPhotosAlbum: didFinishSavingWithError: contextInfo:), nil);
+    if (screengrab != nil) {
+        [self.view makeToast:@"Sending......"];
+        [self sendCaptureImageToUser: screengrab];
+    }else{
+        [self.view makeToast:[appDelegate.localization localizedStringForKey:text_cannot_send_picture] duration:2.0 position:CSToastPositionCenter];
+    }
 }
 
--(UIImage *) takeAScreenShot {
+-(UIImage *)takeAScreenShot {
     CGFloat scale = [[UIScreen mainScreen] scale];
-    CGSize size = CGSizeMake(_videoPreview.bounds.size.width*scale, _videoPreview.bounds.size.height*scale);
+    CGSize size = CGSizeMake(_videoView.bounds.size.width*scale, _videoView.bounds.size.height*scale);
     CGRect rect = CGRectMake(0, 0, size.width, size.height);
     
     UIGraphicsBeginImageContextWithOptions(size, NO, 1);
-    [_videoPreview drawViewHierarchyInRect:rect afterScreenUpdates:NO];
+    [_videoView drawViewHierarchyInRect:rect afterScreenUpdates:NO];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
@@ -2258,6 +2249,60 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
     UIConferenceCell *curCell = (UIConferenceCell *)[collectionConference cellForItemAtIndexPath: curIndex];
     linphone_core_terminate_call([LinphoneManager getLc], curCell.call);
     changeConference = NO;
+}
+
+//  Add new by Khai Le on 07/07/2018
+- (void)startUploadImage: (UIImage *)uploadImage toServerWithMessageId: (NSString *)idMessage andName: (NSString *)imageName
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        NSData *imageData = UIImageJPEGRepresentation(uploadImage, 1.0);
+        UploadPicture *session = [[UploadPicture alloc] init];
+        session.idMessage = idMessage;
+        
+        [session uploadData:imageData withName:imageName beginUploadBlock:nil finishUploadBlock:^(UploadPicture *uploadSession) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([uploadSession.namePicture isEqualToString:@"error"])
+                {
+                    [self.view makeToast:[appDelegate.localization localizedStringForKey:text_cannot_send_picture] duration:2.0 position:CSToastPositionCenter];
+                }else{
+                    NSString *displayName = [NSDatabase getProfielNameOfAccount: USERNAME];
+                    NSString *remoteParty = [self getPhoneNumberOfCall];
+                    
+                    NSString *strPush = [appDelegate.localization localizedStringForKey:sent_message_to_you];
+                    strPush = [NSString stringWithFormat:@"%@ %@", displayName, [appDelegate.localization localizedStringForKey:sent_photo_to_you]];
+                    
+                    [AppUtils sendMessageForOfflineForUser:remoteParty fromSender:USERNAME withContent:strPush andTypeMessage:userimage withGroupID:@""];
+                    
+                    int burn = [AppUtils getBurnMessageValueOfRemoteParty: remoteParty];
+                    [appDelegate.myBuddy.protocol sendMessageMediaForUser:remoteParty withLinkImage:uploadSession.namePicture andDescription:appDelegate.titleCaption andIdMessage:idMessage andType:userimage withBurn:burn forGroup:NO];
+                    
+                    [self.view makeToast:[appDelegate.localization localizedStringForKey:text_capture_sent] duration:2.0 position:CSToastPositionCenter];
+                }
+            });
+        }];
+    });
+}
+
+- (void)sendCaptureImageToUser: (UIImage *)captureImage
+{
+    NSString *remoteParty = [self getPhoneNumberOfCall];
+    NSString *idMsgImage = [NSString stringWithFormat:@"userimage_%@", [AppUtils randomStringWithLength: 20]];
+    NSString *detailURL = [NSString stringWithFormat:@"%@_%@.jpg", USERNAME, [AppUtils randomStringWithLength:20]];
+    
+    int delivered = 0;
+    if (appDelegate.xmppStream.isConnected) {
+        delivered = 1;
+    }
+    
+    NSArray *fileNameArr = [AppUtils saveImageToFiles: captureImage withImage: detailURL];
+    detailURL = [fileNameArr objectAtIndex: 0];
+    NSString *thumbURL = [fileNameArr objectAtIndex: 1];
+    
+    int burnMessage = [AppUtils getBurnMessageValueOfRemoteParty: remoteParty];
+    [NSDatabase saveMessage:USERNAME toPhone:remoteParty withContent:@"" andStatus:NO withDelivered:delivered andIdMsg:idMsgImage detailsUrl:detailURL andThumbUrl:thumbURL withTypeMessage:imageMessage andExpireTime:burnMessage andRoomID:@"" andExtra:nil andDesc:appDelegate.titleCaption];
+    
+    //  Upload image lên server
+    [self startUploadImage:captureImage toServerWithMessageId:idMsgImage andName:detailURL];
 }
 
 @end

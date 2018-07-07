@@ -92,8 +92,6 @@
     NSString *detailURL;
     
     MoreChatView *viewChatMore;
-    
-    WebServices *webService;
 }
 
 @end
@@ -124,10 +122,7 @@
     [_tvMessage addObserver:self forKeyPath:@"contentSize" options:(NSKeyValueObservingOptionNew) context:NULL];
     
     [super viewDidLoad];
-    
-    webService = [[WebServices alloc] init];
-    webService.delegate = self;
-    
+
     //  my code here
     revealVC = [self revealViewController];
     [revealVC panGestureRecognizer];
@@ -447,9 +442,7 @@
     [appDelegate.friendBuddy sendMessage: messageSend secure:secure withIdMessage:idMessage];
     
     //  push message
-    [self sendMessageForOfflineForUser:_userAccount fromSender:USERNAME
-                           withContent:messageSend
-                        andTypeMessage:@"text" withGroupID:@""];
+    [AppUtils sendMessageForOfflineForUser:_userAccount fromSender:USERNAME withContent:messageSend andTypeMessage:@"text" withGroupID:@""];
     
     // setup các UI
     _lbNoMessage.hidden = YES;
@@ -2249,9 +2242,8 @@
     BOOL isDelete = [NSDatabase deleteOneMessageWithId: messageData.idMessage];
     if (isDelete) {
         appDelegate._heightChatTbView = 0.0;
-        NSString *meStr = [[NSUserDefaults standardUserDefaults] objectForKey: key_login];
         _listMessages = [[NSMutableArray alloc] init];
-        [_listMessages addObjectsFromArray:[NSDatabase getListMessagesHistory:meStr withPhone:_userAccount]];
+        [_listMessages addObjectsFromArray:[NSDatabase getListMessagesHistory:USERNAME withPhone:_userAccount]];
         [_tbChat reloadData];
         [self updateAllFrameForController: false];
     }else{
@@ -2425,21 +2417,6 @@
     [[PhoneMainView instance] changeCurrentView:[OutgoingCallViewController compositeViewDescription] push:TRUE];
 }
 
-- (void)sendMessageForOfflineForUser: (NSString *)IDRecipient fromSender: (NSString *)Sender withContent: (NSString *)content andTypeMessage: (NSString *)typeMessage withGroupID: (NSString *)GroupID
-{
-    NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] init];
-    [jsonDict setObject:AuthUser forKey:@"AuthUser"];
-    [jsonDict setObject:AuthKey forKey:@"AuthKey"];
-    [jsonDict setObject:IDRecipient forKey:@"IDRecipient"];
-    [jsonDict setObject:@"yes" forKey:@"Xmpp"];
-    [jsonDict setObject:Sender forKey:@"Sender"];
-    [jsonDict setObject:typeMessage forKey:@"Type"];
-    [jsonDict setObject:content forKey:@"Content"];
-    [jsonDict setObject:GroupID forKey:@"GroupID"];
-    
-    [webService callWebServiceWithLink:PushSharp withParams:jsonDict];
-}
-
 #pragma mark - ContactDetailsImagePickerDelegate Functions
 
 - (void) imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(NSDictionary *)editingInfo
@@ -2476,9 +2453,7 @@
         [self startAllExpireMessageOfMe];
     }
     
-    [self sendMessageForOfflineForUser:_userAccount fromSender:USERNAME
-                           withContent:uploadSession.namePicture
-                        andTypeMessage:@"image" withGroupID:@""];
+    [AppUtils sendMessageForOfflineForUser:_userAccount fromSender:USERNAME withContent:uploadSession.namePicture andTypeMessage:@"image" withGroupID:@""];
     //  Leo Kelvin
     //  [appDelegate.myBuddy.protocol sendMessageImageForUser:_userAccount withLinkImage:uploadSession.namePicture andDescription:appDelegate.titleCaption andIdMessage:idMsgImage];
     
@@ -2490,23 +2465,6 @@
     CGFloat topoffset = ([txtview bounds].size.height - [txtview contentSize].height * [txtview zoomScale])/2.0;
     topoffset = ( topoffset < 0.0 ? 0.0 : topoffset );
     txtview.contentOffset = (CGPoint){.x = 0, .y = -topoffset};
-}
-
-#pragma mark - WebServices delegate
-- (void)failedToCallWebService:(NSString *)link andError:(NSString *)error {
-    if ([link isEqualToString:PushSharp]) {
-        NSLog(@"Error");
-    }
-}
-
-- (void)successfulToCallWebService:(NSString *)link withData:(NSDictionary *)data {
-    if ([link isEqualToString:PushSharp]) {
-        NSLog(@"%@", data);
-    }
-}
-
-- (void)receivedResponeCode:(NSString *)link withCode:(int)responeCode {
-    
 }
 
 @end

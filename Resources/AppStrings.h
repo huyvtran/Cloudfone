@@ -68,6 +68,8 @@
 #define prefix_CHAT_BURN    @"prefix_CHAT_BURN"
 #define prefix_CHAT_BLOCK   @"prefix_CHAT_BLOCK"
 
+#define userimage   @"userimage"
+
 #define playVideoMessage            @"playVideoMessage"
 #define receiveIQResultLeaveRoom    @"receiveIQResultLeaveRoom"
 #define receiveIQErrorLeaveRoom     @"receiveIQErrorLeaveRoom"
@@ -848,6 +850,7 @@
 
 #define text_unfriend_content   @"text_unfriend_content"
 #define text_cannot_send_video  @"text_cannot_send_video"
+#define text_cannot_send_picture  @"text_cannot_send_picture"
 #define text_clear_chat_history @"text_clear_chat_history"
 
 #define can_not_reset_password  @"can_not_reset_password"
@@ -858,7 +861,7 @@
 
 #define text_show_pass   @"text_show_pass"
 #define text_hide_pass   @"text_hide_pass"
-
+#define text_capture_sent   @"text_capture_sent"
 
 
 //Added by David

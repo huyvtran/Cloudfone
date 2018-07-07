@@ -99,7 +99,7 @@ static UICompositeViewDescription *compositeDescription = nil;
     PulsingHaloLayer *layer = [PulsingHaloLayer layer];
     self.halo = layer;
     [_imgAvatar.superview.layer insertSublayer:self.halo below:_imgAvatar.layer];
-    [self setupInitialValuesWithNumLayer:5 radius:0.8 duration:0.4 color:[UIColor colorWithRed:(220/255.0) green:(220/255.0) blue:(220/255.0) alpha:0.7]];
+    [self setupInitialValuesWithNumLayer:5 radius:0.8 duration:0.45 color:[UIColor colorWithRed:(220/255.0) green:(220/255.0) blue:(220/255.0) alpha:0.7]];
     [self.halo start];
     
     [NSNotificationCenter.defaultCenter addObserver:self
@@ -164,8 +164,8 @@ static UICompositeViewDescription *compositeDescription = nil;
         textFontBold = [UIFont fontWithName:MYRIADPRO_BOLD size:24.0];
         textFont = [UIFont fontWithName:MYRIADPRO_REGULAR size:20.0];
     }else{
-        wIconEndCall = 50.0;
-        wSmallIcon = 40.0;
+        wIconEndCall = 60.0;
+        wSmallIcon = 45.0;
         wAvatar = 90.0;
         wIconState = 15.0;
         hStateLabel = 25.0;

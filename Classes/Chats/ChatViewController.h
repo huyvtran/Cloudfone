@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "MarqueeLabel.h"
 #import "UIBubbleTableView.h"
-#import "WebServices.h"
 
 typedef enum eTouchType{
     eTextRecallOrExpireTime,
@@ -49,7 +48,7 @@ typedef enum eMoreView{
 }eMoreView;
 
 
-@interface ChatViewController : UIViewController<UIBubbleTableViewDataSource, UITextViewDelegate, UITableViewDelegate, UITableViewDataSource, UINavigationControllerDelegate, UIImagePickerControllerDelegate, WebServicesDelegate>
+@interface ChatViewController : UIViewController<UIBubbleTableViewDataSource, UITextViewDelegate, UITableViewDelegate, UITableViewDataSource, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UIView *_viewHeader;
 @property (weak, nonatomic) IBOutlet UIButton *_iconBack;

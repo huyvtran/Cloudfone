@@ -262,24 +262,20 @@ static UICompositeViewDescription *compositeDescription = nil;
             
             NSString *displayName = [NSDatabase getProfielNameOfAccount:USERNAME];
             NSString *strPush = strPush = [NSString stringWithFormat:@"%@ %@", displayName, [appDelegate.localization localizedStringForKey:sent_video_to_you]];
-            
-            [self sendMessageForOfflineForUser:receivePhone fromSender:USERNAME
-                                   withContent:message.content andTypeMessage:@"uservideo" withGroupID:@""];
+            [AppUtils sendMessageForOfflineForUser:receivePhone fromSender:USERNAME withContent:message.content andTypeMessage:@"uservideo" withGroupID:@""];
         }else if ([message.typeMessage isEqualToString: imageMessage])
         {
-            [appDelegate.myBuddy.protocol sendMessageMediaForUser:receivePhone withLinkImage:message.detailsUrl andDescription:message.description andIdMessage:idMsgImage andType:@"userimage" withBurn:burn forGroup:NO];
+            [appDelegate.myBuddy.protocol sendMessageMediaForUser:receivePhone withLinkImage:message.detailsUrl andDescription:message.description andIdMessage:idMsgImage andType:userimage withBurn:burn forGroup:NO];
             //  push message content
             NSString *displayName = [NSDatabase getProfielNameOfAccount:USERNAME];
             NSString *strPush = [NSString stringWithFormat:@"%@ %@", displayName, [appDelegate.localization localizedStringForKey:sent_photo_to_you]];
-            [self sendMessageForOfflineForUser:receivePhone fromSender:USERNAME
-                                   withContent:strPush andTypeMessage:@"userimage" withGroupID:@""];
+            [AppUtils sendMessageForOfflineForUser:receivePhone fromSender:USERNAME withContent:strPush andTypeMessage:userimage withGroupID:@""];
         }else{
             [appDelegate.friendBuddy sendMessage: message.content secure:NO withIdMessage:idMsgImage];
             
             NSString *displayName = [NSDatabase getProfielNameOfAccount:USERNAME];
-            NSString *strPush = [NSString stringWithFormat:@"%@: %@", displayName, message.content];;
-            [self sendMessageForOfflineForUser:receivePhone fromSender:USERNAME
-                                   withContent:strPush andTypeMessage:@"text" withGroupID:@""];
+            NSString *strPush = [NSString stringWithFormat:@"%@: %@", displayName, message.content];
+            [AppUtils sendMessageForOfflineForUser:receivePhone fromSender:USERNAME withContent:strPush andTypeMessage:@"text" withGroupID:@""];
         }
     }
 }
@@ -744,41 +740,5 @@ static UICompositeViewDescription *compositeDescription = nil;
         }
     }
 }
-
-- (void)sendMessageForOfflineForUser: (NSString *)IDRecipient fromSender: (NSString *)Sender withContent: (NSString *)content andTypeMessage: (NSString *)typeMessage withGroupID: (NSString *)GroupID
-{
-    NSString *strURL = [NSString stringWithFormat:@"%@/%@", link_api, PushSharp];
-    NSURL *URL = [NSURL URLWithString:strURL];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL: URL];
-    [request setHTTPMethod:@"POST"];
-    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
-    [request setTimeoutInterval: 60];
-    
-    NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] init];
-    [jsonDict setObject:AuthUser forKey:@"AuthUser"];
-    [jsonDict setObject:AuthKey forKey:@"AuthKey"];
-    [jsonDict setObject:IDRecipient forKey:@"IDRecipient"];
-    [jsonDict setObject:@"yes" forKey:@"Xmpp"];
-    [jsonDict setObject:Sender forKey:@"Sender"];
-    [jsonDict setObject:typeMessage forKey:@"Type"];
-    [jsonDict setObject:content forKey:@"Content"];
-    [jsonDict setObject:GroupID forKey:@"GroupID"];
-    
-    NSString *jsonRequest = [jsonDict JSONString];
-    NSData *requestData = [jsonRequest dataUsingEncoding:NSUTF8StringEncoding];
-    
-    [request setHTTPMethod:@"POST"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    
-    [request setValue:[NSString stringWithFormat:@"%d", (int)[requestData length]] forHTTPHeaderField:@"Content-Length"];
-    [request setHTTPBody: requestData];
-    
-    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-    if(connection) {
-        NSLog(@"Connection Successful");
-    }
-}
-
 
 @end

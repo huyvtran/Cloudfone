@@ -256,7 +256,7 @@
             /*  Leo Kelvin
             NSString *cloudFoneID = [_infoDict objectForKey:@"user"];
             NSString *user = [NSString stringWithFormat:@"%@@%@", cloudFoneID, xmpp_cloudfone];
-            NSString *me = [NSString stringWithFormat:@"%@@%@", [[NSUserDefaults standardUserDefaults] objectForKey: key_login], xmpp_cloudfone];
+            NSString *me = [NSString stringWithFormat:@"%@@%@", USERNAME, xmpp_cloudfone];
              
             [[LinphoneAppDelegate sharedInstance].myBuddy.protocol rejectRequestFromUser:user toMe: me];
             [NSDBCallnex removeAnUserFromRequestedList: cloudFoneID];
