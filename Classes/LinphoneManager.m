@@ -1545,6 +1545,10 @@ static void linphone_iphone_message_received(LinphoneCore *lc, LinphoneChatRoom 
 	[(__bridge LinphoneManager *)linphone_core_get_user_data(lc) onMessageReceived:lc room:room message:message];
 }
 
+static void linphone_iphone_info_received(LinphoneCore *lc, LinphoneCall *call, const LinphoneInfoMessage *msg) {
+    NSLog(@"HEHE");
+}
+
 static void linphone_iphone_message_received_unable_decrypt(LinphoneCore *lc, LinphoneChatRoom *room,
 															LinphoneChatMessage *message) {
 
@@ -2008,10 +2012,11 @@ void networkReachabilityCallBack(SCNetworkReachabilityRef target, SCNetworkReach
 
 static LinphoneCoreVTable linphonec_vtable = {
 	.call_state_changed = (LinphoneCoreCallStateChangedCb)linphone_iphone_call_state,
-	.registration_state_changed = linphone_iphone_registration_state,
+    .registration_state_changed = linphone_iphone_registration_state,
 	.notify_presence_received_for_uri_or_tel = linphone_iphone_notify_presence_received_for_uri_or_tel,
 	.auth_info_requested = linphone_iphone_popup_password_request,
 	.message_received = linphone_iphone_message_received,
+    .info_received = linphone_iphone_info_received,
 	.message_received_unable_decrypt = linphone_iphone_message_received_unable_decrypt,
 	.transfer_state_changed = linphone_iphone_transfer_state_changed,
 	.is_composing_received = linphone_iphone_is_composing_received,

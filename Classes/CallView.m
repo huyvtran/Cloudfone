@@ -51,6 +51,10 @@
 #import <OpenGLES/EAGLDrawable.h>
 #import "UploadPicture.h"
 
+void message_received(LinphoneCore *lc, LinphoneChatRoom *room, const LinphoneAddress *from, const char *message) {
+    printf(" Message [%s] received from [%s] \n",message,linphone_address_as_string (from));
+}
+
 const NSInteger SECURE_BUTTON_TAG = 5;
 
 @interface CallView (){
@@ -287,6 +291,36 @@ static UICompositeViewDescription *compositeDescription = nil;
 	[self callUpdate:call state:state animated:FALSE];
 }
 
+- (void)testPressed {
+    linphone_core_enable_chat(LC);
+    
+    LinphoneContent *content = linphone_core_create_content(LC);
+    linphone_content_set_string_buffer(content, "KL");
+    linphone_content_set_type(content, "text/plain");
+
+    LinphoneInfoMessage *msg = linphone_core_create_info_message(LC);
+    linphone_info_message_set_content(msg, content);
+
+    LinphoneCall *call = linphone_core_get_current_call(LC);
+    linphone_call_send_info_message(call, msg);
+    [self.view makeToast:@"SEND LINPHONE INFO MESSAGE" duration:2.0 position:CSToastPositionCenter];
+    
+    //  NSString *username = USERNAME;
+    NSString *phone = [self getPhoneNumberOfCall];
+    NSString *uri;
+    LinphoneAddress *addr = [LinphoneUtils normalizeSipOrPhoneAddress: phone];
+    if (addr) {
+        uri = [NSString stringWithUTF8String:linphone_address_as_string(addr)];
+    } else {
+        uri = phone;
+    }
+    LinphoneChatRoom *chat_room = linphone_core_get_chat_room_from_uri(LC, uri.UTF8String);
+    LinphoneChatMessage *msg1 = linphone_chat_room_create_message(chat_room, "LQK");
+    linphone_chat_room_send_chat_message(chat_room, msg1);
+    
+    [self.view makeToast:@"SEND ROOM MESSAGE" duration:2.0 position:CSToastPositionCenter];
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
     
@@ -510,6 +544,10 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
 
 - (void)callDurationUpdate
 {
+    
+    int size = linphone_core_get_conference_size(LC);
+    NSLog(@"KL-----size: %d", size);
+    
     int duration;
     list = linphone_core_get_calls([LinphoneManager getLc]);
     if (list != NULL) {
@@ -719,6 +757,7 @@ static void hideSpinner(LinphoneCall *call, void *user_data) {
     // Add tất cả các cuộc gọi vào nhóm
     if (linphone_core_get_calls_nb(LC) >= 2) {
         NSLog(@"-----gop conference connected");
+        NSLog(@"-----gop conference connected %d", linphone_core_get_calls_nb(LC));
         linphone_core_add_all_to_conference([LinphoneManager getLc]);
     }
     
